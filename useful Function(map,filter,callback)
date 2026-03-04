@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <script>
+        const name =['제니','지수','로제','리사']
+        // for (let i=0;i<name.length;i++){
+        //     console.log
+        // }
+        
+        // map()함수 : for문 보다 간단하게 루프 가능
+        const name2= name.map((i)=>{
+            return i;
+        })
+
+        console.log(name2);
+
+        //원소를 하나씩 출력
+        name.map((i)=> console.log(i));
+        
+        //filter 함수 : 조건에 일치하는 값만 배열로 부터 추출
+        const num = [1,2,3,4]
+        const odd = num.filter((i)=>{
+            return i%2==1 //홀수만 반환받기
+        })
+        console.log(odd);
+
+        //콜백 : 비동기
+        const pro=['길동','뷔','정국']
+        const pro2=pro.map((i)=>{
+            if(i=='뷔'){
+                return i;
+            }
+            else{
+                return `${i}~~`;
+            }
+        })
+
+        console.log(pro2);
+        
+    </script>
+</body>
+</html>
