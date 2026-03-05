@@ -1,0 +1,43 @@
+import React, { useState } from 'react';
+
+const App = () => {
+  //객체 초기화
+  const [user, setUser]=useState([
+    {id:1,username:"user1",email:"u1@naver.com"},
+    {id:2,username:"user2",email:"u2@naver.com"},
+    {id:3,username:"user3",email:"u3@naver.com"},
+  ]);
+
+  const [pickUser, setPickUser]=useState(null);
+
+  //회원 클릭하면 상태 변경됨
+  const clickUser=(user)=>{
+     setPickUser(user); //클릭한 값(객체)이 pickUser 에 저장됨
+  }
+
+  return (
+    <div>
+        <h1>Member</h1>
+        <h1>회원 목록</h1>
+        {user.map((i)=>{
+          return(
+            <div key={i.id} onClick={()=> clickUser(i)} >
+              <h1>{i.username}</h1>
+            </div>
+            //이벤트 동작시 함수호출 구문을 direct로 넣으면 컴포넌트가 재렌더링 될때마다 함수호출이 된다.     
+            //  <div key={i.id} onClick={clickUser(i)} >
+            //무한 호출이 발생하므로 익명함수를 호출하여 이벤트 발생시에만 함수가 호출되는 구문형태로 적어야함
+          )
+        })}
+{/* //클릭을 했다면  */}
+    {pickUser && (
+      <div>
+        <h2>{pickUser.username}</h2>
+        <h2>{pickUser.email}</h2>
+      </div>
+    )}
+      </div>
+  );
+};
+
+export default App;
