@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
   const [num, setNum] = useState(initCount);
 
-  const ch1 = (n) => {
+  const ch1 = (n) => { 
     setNum((n1) => n + n1);
   }
 
