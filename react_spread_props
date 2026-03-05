@@ -1,0 +1,34 @@
+import React from 'react';
+import { Greet } from './components/Greet';
+
+const App = () => {
+
+  const data1={
+    msg:'목요일',
+    color:'orange',
+    age:10,
+  }
+  return (
+    <div>
+      <Greet {...data1} />
+      <Greet msg={"내일은"} />
+      <Greet msg={"금요일"}><div>주말</div></Greet>
+    </div>
+  );
+};
+
+export default App;
+
+
+import React from 'react';
+
+export const Greet = ({msg,color,children}) => {
+  return (
+    <div>
+      <button style={{color:color}}>
+        {msg}
+        {children}
+      </button>
+    </div>
+  );
+};
