@@ -1,0 +1,16 @@
+import React, { useState } from 'react'
+
+const App = () => {
+const [num,setNum]=useState(0)
+const puls =(n)=> {
+setNum((n1) => n+n1)
+}
+return (
+<div>
+<h1>{num}</h1>
+<button onClick={()=>puls(1)}>plus</button>
+</div>
+)
+}
+
+export default App
