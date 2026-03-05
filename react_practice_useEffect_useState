@@ -1,0 +1,30 @@
+import React, { useEffect, useState } from 'react';
+
+const App = () => {
+
+  const [Agree,setAgree] = useState(0);
+  const [Disagree,setDisagree]= useState(0);
+
+  const onAgree = () =>{
+    setAgree(Agree+1);
+  }
+  const onDisagree = () =>{
+    setDisagree(Disagree+1);
+  }
+  useEffect(()=>{
+    console.log("투표 수 변경되었습니다");
+  },[Agree,Disagree])
+
+
+
+  return (
+    <>
+      <button onClick={onAgree}>찬성</button>
+      <h2>{Agree}</h2> 
+
+      <button onClick={onDisagree}>반대</button>
+      <h2>{Disagree}</h2> 
+    </>
+  );
+};
+export default App;
