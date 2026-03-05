@@ -1,0 +1,23 @@
+##익명함수
+
+import React, { useState } from 'react'
+
+const App = () => {
+  //num 이라는 변수에 0 초기화
+  const [num,setNum]=useState(0);
+
+  const ch1=(n)=>{
+    setNum((n1) => n+n1);
+
+  }
+
+  return (
+    <div>
+     <p>{num}</p>
+      <button onClick={()=>ch1(10)}>+10</button>
+      <button onClick={()=>ch1(-5)}>-5</button>
+
+    </div>
+  )
+}
+export default App;
