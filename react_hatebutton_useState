@@ -1,0 +1,27 @@
+import React, { useState } from 'react'
+
+  const HateButton = ({ initCount }) => {
+
+  const [num, setNum] = useState(initCount);
+
+  const ch1 = (n) => {
+    setNum((n1) => n + n1);
+  }
+
+  return (
+  <div>
+    <p>{num}</p>
+    <button onClick={() => ch1(1)}>싫어요</button>
+  </div>
+  )
+  }
+
+  const App = () => {
+  return (
+  <div>
+  <HateButton initCount={0} />
+  </div>
+)
+}
+
+export default App;
