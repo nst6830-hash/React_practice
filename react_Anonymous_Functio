@@ -1,4 +1,4 @@
-##익명함수
+##익명함수Anonymous Functio
 
 import React, { useState } from 'react'
 
