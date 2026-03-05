@@ -1,0 +1,20 @@
+import React from 'react'
+
+const App = () => {
+
+const li = ['리액트','DB','딥러닝']
+
+return (
+<div>
+{li.map((i)=>{
+return(
+<ul>
+<li>{i}</li>
+</ul>
+)
+})}
+</div>
+)
+}
+
+export default App
