@@ -1,0 +1,36 @@
+import React, { useState } from 'react';
+//rsc 함수형 컴포넌트 (react server components)
+export const App = () => {
+
+  const [num, setNum] = useState(0);  //0이 num에 대입됨
+
+  const [opinion, setOpinion]= useState(false);
+
+  const onClickButton = () =>{
+    setNum(num+1); //상태 변경 메소드
+  }
+
+  const onOpinion=()=>{
+    setOpinion(!opinion);
+  }
+
+  //객체타입
+  const con1={
+    color:"red",
+    fontSize:"2em",
+    border:"3px solid red"
+  }
+
+  return (
+    <>
+      <h1 style={con1}>HI</h1>
+      <button onClick={onClickButton}>좋아요</button>
+      <h2>👍{num}</h2> 
+      <button onClick={onOpinion}>찬성/반대</button>
+      <h2>{opinion ? '찬성' : '반대'}</h2>
+      {/* 윈도우키 + . */}
+      {/* <h1 style={{color:'blue', fontSize:"10px"}}>리액트</h1> 인라인스타일 */}
+    </>
+  );
+};
+
