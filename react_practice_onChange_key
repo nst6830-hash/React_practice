@@ -26,3 +26,36 @@ const Sub = () => {
 };
 
 export default Sub;
+
+-----------------------------------------------------------------------
+
+import { useState } from "react";
+
+const Sub = () => {
+
+    const [name, setName]=useState([
+        {id:1, msg:'tom'},
+        {id:2, msg:'juli'},
+        {id:3, msg:'jack'},
+    ])
+
+    const [inText,setIntext]=useState('')
+
+    const name2 = name.map((i)=> <li key={i.id}>{i.msg}</li>)
+
+    const on =(e) => {
+      setIntext(e.target.value)
+    }
+
+  return (
+   <>
+   <input onChange={on} value={inText} />
+   <ul>
+      {name2}
+   </ul>
+      {inText}
+   </>
+  )
+};
+
+export default Sub;
