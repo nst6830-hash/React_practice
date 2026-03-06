@@ -1,0 +1,55 @@
+import React, { useState } from 'react';
+
+const App = () => {
+
+  const [list, setList] = useState
+  ([
+    { id: 1, msg: '홍길동' }
+  ]);
+
+  const [input, setInput] = useState('');
+
+  const onCh1 = (e) => 
+    {
+    setInput(e.target.value);
+  }
+
+  const onAdd = () => {
+    const newList = 
+    { //list 인덱스 길이 +1 해서 쌓을 수있게 
+      id: list.length + 1,
+      msg: input
+    }
+    //spread 사용하여 펼치기
+    setList([...list, newList]);
+    setInput("");
+  }
+
+  const onDelete = (id) => 
+    {
+    setList(list.filter((item) => item.id !== id))
+  } // 비교하여 같지 않을 때 남기기
+
+  return (
+    <div>
+      <h2>namelist</h2>
+
+      <input placeholder='이름입력' onChange={onCh1} value={input}/>
+
+      <button onClick={onAdd}>추가</button>
+
+      <ul>
+        {list.map((item) => 
+        (
+          <li key={item.id}>
+            {item.msg}
+            <button onClick={() => onDelete(item.id)}>삭제</button>
+          </li>
+        ))}
+      </ul>
+
+    </div>
+  );
+};
+
+export default App;
