@@ -33,3 +33,44 @@ const App = () => {
 }
 
 export default App
+
+
+----------------------------------------------------------------------------------------
+안전한 방식 (Json 구조로 저장하기.)
+import React, { use, useState } from 'react';
+
+const App = () => {
+
+  const [todo, setTodo]=useState([]);
+  //추가버튼 눌렀을 때 객체배열에 추가
+  const [input, setInput]=useState('');
+
+  //값을 입력하면 setInput메소드로 입력한 값을 input에 저장
+  const onCh1=(e)=>{
+    setInput(e.target.value); //운동
+  }
+
+  const onAdd=()=>{
+    setTodo([...todo, input]);
+    //[{id:date, msg: input에 넣은값 }] = todo에 저장된다.
+    setInput("");
+  }
+
+
+  return (
+    <div>
+      <h2>TodoList</h2>
+      <input placeholder='Todo List' onChange={onCh1} value={input}/>
+      <button onClick={onAdd}>추가</button>
+
+      <ul>
+        {todo.map((todo1) =>{
+          return <li>{todo1}</li>
+        })}
+      </ul>
+
+    </div>
+  );
+};
+33
+export default App;
