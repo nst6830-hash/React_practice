@@ -1,0 +1,35 @@
+import React, { useState } from 'react'
+
+const App = () => {
+
+  const [text,setText] = useState("")
+  const [li,setLi] = useState([])
+
+  const handleChange = (e) => {
+    setText(e.target.value)
+  }
+  const addTodo = () => {
+    setLi([...li,text])
+    setText('')
+  }
+  
+  return (
+    <div>
+      <h1>To do List</h1>
+      <input placeholder='To do what?' onChange={handleChange} value={text}/>
+      <button onClick={addTodo}>Add</button>
+      <div>
+        {li.map((i,index)=>{
+          return(
+            <ul key={index}>
+              <li>{i}</li>
+            </ul>
+          )
+        })}
+      </div>
+      
+    </div>
+  )
+}
+
+export default App
