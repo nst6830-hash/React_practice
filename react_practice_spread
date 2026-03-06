@@ -38,6 +38,10 @@ const Board =() => {
             //기존 게시물을 spread하여 복사. newPost를 배열 마지막에 추가하여 새로운 배열 생성후 설정
             //따라서 기존 게시물은 -> 유지되고, 추가되지 않는다.
             //posts.push(newPost) -> x 주소값 차이
+
+            setNewTitle('');
+            setNewContent('');
+            //게시글 등록 버튼 이후 공백으로 설정하기
         }
     }
 
@@ -67,7 +71,7 @@ const Board =() => {
         {selPost1 && (
             <div>
                 <h2>{selPost1.title}</h2>
-                <h2>{selPost1.title}</h2>
+                <h2>{selPost1.content}</h2>
             </div>
         )}
     </div>
