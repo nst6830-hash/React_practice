@@ -1,0 +1,31 @@
+import React, { useState } from 'react'
+
+const App = () => {
+
+  const [todo,setTodo] =useState([
+    {id:1,msg:'공부'},
+    {id:2,msg:'운동'},
+    {id:3,msg:'영화'},
+  ])
+
+  const onDelete=(id)=>{
+    setTodo(todo.filter(todo => todo.id !== id ))
+  }
+//filter 로 구현
+//객체 배열에 있는 id 와 내가 삭제할 id 가 같지 않으면
+//삭제안할 테이터만 배열에 남기기
+  
+
+  return (
+    <div>
+      <h2>To do list</h2>
+      <ul>
+        {todo.map(todo1 => <li key={todo1.id}>{todo1.msg}
+          <button onClick={()=> onDelete(todo1.id)}>삭제</button>
+        </li>)}
+      </ul>
+    </div>
+  )
+}
+
+export default App
