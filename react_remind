@@ -1,0 +1,61 @@
+App.jsx
+
+import React, { useState } from 'react';
+import ProCard from './ProCard';
+
+const App = () => {
+
+  const user=[
+    {id:1, name:'제니', age:35, job:'개발자'},
+    {id:2, name:'로제', age:25, job:'교사'},
+    {id:3, name:'리사', age:24, job:'디자이너'},
+    {id:4, name:'지수', age:36, job:'의사'},
+  ]
+
+  //클릭한 id값이 상태가 변경되면서 selectUserId에 저장하겠다.
+  const [selectUserId, setSelectUserId]=useState(1);
+
+  //배열객체를 순회하면서 user.id가 내가 클릭한 id와 같은지 검사해서 찾는다.(find)
+  const selUser=user.find((user) => user.id === selectUserId );
+  //  {id:1, name:'제니', age:35, job:'개발자'},
+
+
+  return (
+    <div> 
+      <h1>프로필</h1>
+      <div>
+        {user.map((user1)=>(
+          <button key={user1.id}  onClick={()=> setSelectUserId(user1.id)}>{user1.name}</button>
+        ))}
+        
+      </div>
+
+      <ProCard user1={selUser} />
+    </div>
+  );
+};
+
+export default App;
+
+
+ProCard.jsx
+
+import React, { useEffect } from 'react';
+
+const ProCard = ({user1}) => {
+
+    //user1이 변경될때마다 user1 객체출력(콘솔로)
+    useEffect(()=>{
+        console.log(user1);
+    },[user1]);
+
+    return (
+        <div>
+            <h2>이름:{user1.name} </h2>
+            <h2>나이:{user1.age} </h2>
+            <h2>직업:{user1.job} </h2>
+        </div>
+    );
+};
+
+export default ProCard;
