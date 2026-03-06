@@ -1,0 +1,101 @@
+
+import React,{useEffect, useState} from "react";
+import "./Board.css"
+
+const Board =() => {
+
+    const [posts,setPosts]=useState([
+        {id :1, title:'첫번째 제목',content:'첫번째 내용'},
+        {id :2, title:'두번째 제목',content:'두번째 내용'},
+        {id :3, title:'세번째 제목',content:'세번째 내용'},
+    ])
+
+    //클릭 할 때마다 클릭한 값 출력
+    //null로 초기화 하기
+    const [selPost1,setSelPost1]=useState(null)
+    //클릭 할 때마다 클릭한 값(변화값)을 selPost1(객체) 에 저장
+
+    const selPost=(post)=>{
+        setSelPost1(post) //클릭한 값 (객체)
+    }
+
+        //새 게시글 제목 관리하는 state
+    const [newTitle,setNewTitle]=useState('')
+
+        //새 게시글 내용 관리하는 state
+    const [newContent,setNewContent]=useState('')
+
+        //text창에 제목 ,내용 입력하여 버튼 클릭시 입력한 새로운 제목, 내용이 기존 객체 배열에 추가되도록
+        //게시글 등록 함수 구현
+    const addPost = () =>{ //trim 공백 제거 
+        if(newTitle.trim() && newContent.trim()){
+            const newPost = {
+                id : posts.length + 1, //배열의 수에 따라 1씩 증가
+                title : newTitle, // 제목 입력하면 newTitle에 저장
+                content : newContent,
+            }
+            setPosts([...posts, newPost]);
+            //기존 게시물을 spread하여 복사. newPost를 배열 마지막에 추가하여 새로운 배열 생성후 설정
+            //따라서 기존 게시물은 -> 유지되고, 추가되지 않는다.
+            //posts.push(newPost) -> x 주소값 차이
+
+            setNewTitle('');
+            setNewContent('');
+            //게시글 등록 버튼 이후 공백으로 설정하기
+        }
+    }
+    //해당 postId를 가진 게시글 삭제
+    //클릭한 id 와 일치하지 않는 게시글만 남겨서 posts 객체 배열에 저장
+    const deletePost = (postId) =>{
+        //삭제된 게시글은 배열에 있으면 안되므로 ...setPosts 사용 상태변경
+        setPosts(posts.filter((post1) => postId !== post1.id))
+                               //클릭한 id:postId 게시글 id : post1
+        }
+        useEffect(()=>{
+            //클릭한 게시물이 있고 (클릭한상태)&& (조건중 하나라도 맞으면(some))
+            // -> 클릭한 게시글이 목록에 없다면 ? 
+            if(selPost1 && !posts.some((post) => post.id === selPost1.id)){
+                setSelPost1(null) //내가 클릭한 객체를 null로 변경 ->null =false
+            }
+        },[posts, selPost1]) //게시글 클릭하여 출력중일 때에,
+        // 그 게시글을 삭제할 때 선택되어있으면 안되므로 초기값은 null
+    
+
+
+    return ( //컴포넌트 return (App에 넘길 화면 보여줄 jsx)
+
+        <div className="board_app">
+            <h1>Board</h1>
+            <div className="board_li">
+                <input type="text" placeholder="제목입력" value={newTitle}
+                onChange={(e)=> setNewTitle(e.target.value) }></input><br></br>
+
+                <textarea placeholder="내용입력" value={newContent}
+                onChange={(e)=> setNewContent(e.target.value)}></textarea>
+
+                <button onClick={addPost}>게시글 등록!!!</button>
+                <h2>Board List</h2>
+
+        {posts.map((i) => {
+                return( //map return 배열 돌면서 출력할 jsx
+                <div key={i.id} className="board_item" onClick={()=> selPost(i)}>
+                    <h2>{i.title}</h2>
+                    <button onClick={()=>{
+                        //e.stopPropagation() : 버블링 방지(부모 이벤트 까지 전파되지 않게 막음)
+                        deletePost(i.id)}}>삭제</button>
+                </div>// key 속성 쓰는 이유 : react에서 배열 렌더링할 때 각 항목 식별 위함
+                        // 상태 변화 -> (항목이 추가,변경,삭제 효율적 파악) dom업데이트 최적화
+                )
+        })}
+        </div>
+        {selPost1 && (
+            <div>
+                <h2>{selPost1.title}</h2>
+                <h2>{selPost1.content}</h2>
+            </div>
+        )}
+    </div>
+  );
+};
+
+export default Board;
