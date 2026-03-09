@@ -1,0 +1,102 @@
+import React, { useState } from 'react'
+
+const App = () => {
+
+  // 이름 입력 상태
+  const [name,setName]=useState("")
+
+  // 이메일 입력 상태
+  const [email,setEmail]=useState("")
+
+  // 사용자 목록 배열
+  const [users,setUsers]=useState([])
+
+  // 수정 상태 관리
+  const [modiId,setModiId]=useState(null)
+// ----------------------------이름,이메일 목록, 수정상태 관리 ---------------------------
+
+// 이름변경
+  const onNameChange = (e)=>
+    {
+    setName(e.target.value)
+  }
+// 이메일변경
+  const onEmailChange = (e)=>
+    {
+    setEmail(e.target.value)
+  }
+
+// 삭제
+  const onDelete = (id)=>
+    {
+    setUsers(users.filter(user => user.id !== id))
+    if(id === modiId){
+      setModiId(null)
+      setName("")
+      setEmail("")
+    }
+  }
+// 수정
+  const onModify = (user)=>
+    {
+    setName(user.name)
+    setEmail(user.email)
+    setModiId(user.id)
+  }
+
+  const onAddUpdate = ()=>{
+
+    if(!email.includes("@")){
+      alert("올바른 이메일 형식을 입력하세요")
+      return
+    }
+
+    if(modiId !== null)
+      {
+      setUsers(users.map((user)=>user.id === modiId ? {...user,name:name,email:email} : user))
+      setModiId(null)
+    }
+    
+    else
+      {
+      setUsers([...users,{id:Date.now(),name:name,email:email}])
+    }
+    setName("")
+    setEmail("")  
+  }
+
+  return (
+    <div>
+      <h1>사용자 목록</h1>
+      <input
+        value={name}
+        onChange={onNameChange}
+        placeholder="이름"
+      />
+
+      <input
+        value={email}
+        onChange={onEmailChange}
+        placeholder="이메일"
+      />
+
+      <button onClick={onAddUpdate}>
+        {modiId !== null ? "수정완료" : "추가"}
+      </button>
+
+
+      <ul>
+        {/* 사용자 목록 출력 */}
+        {users.map((user)=>(
+          <li key={user.id}>
+            이름 : {user.name}, 이메일 : {user.email}
+            <button onClick={()=> onModify(user)}>수정</button>
+            <button onClick={()=> onDelete(user.id)}>삭제</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default App
