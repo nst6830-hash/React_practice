@@ -1,0 +1,39 @@
+import React ,{ useRef }from 'react'
+
+const App = () => {
+
+  // useRef : 렌더링과 상관없이 값을 저장할 수 있는 객체
+  // 초기값은 0
+  const inRef = useRef(0)
+
+  // 컴포넌트가 렌더링 될 때 실행
+  console.log('rendering');
+
+  // useRef 객체 출력
+  console.log(inRef);
+
+  // 실제 저장된 값
+  console.log(inRef.current)
+
+
+  return (
+    <div>
+
+      {/* 버튼 클릭 시 current 값 증가 */}
+      <button onClick={()=>{
+
+        // ref 값 증가
+        inRef.current++
+
+        // 증가된 값 출력
+        console.log(inRef.current);
+
+      }}>
+        버튼 1 증가
+      </button>
+
+    </div>
+  );
+};
+
+export default App
