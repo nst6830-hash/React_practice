@@ -5,11 +5,19 @@ const App = () => {
   const cntRef = useRef(); // undefined
   const [init,setInit]=useState(0);
 
+  const increase = () => {
+    cntRef.current+=1;
+  }
   //hook 사용해보기
   //화면이 다 만들어진 이후에 init 값이 변경되면 'cntRef.current=init;' 실행
   useEffect(()=> {
+    console.log("최초 렌더링");//useEffect 렌더링시 최초에 한번 실행됨
+    
     cntRef.current=init;//0이 current에 대입 되면서
   },[init])
+
+  console.log(`Ref값 : ${cntRef.current}`);
+  
 
   return (
 
@@ -17,6 +25,7 @@ const App = () => {
       <p>{init}</p>
       <p>{cntRef.current}</p>
       <button onClick={()=>setInit(init+1)}>state 1 증가</button>
+      <button onClick={increase}>ref증가</button>
     </div>
   );
 };
@@ -24,3 +33,14 @@ const App = () => {
 //2개로 증가 -> 처음 출력은 'undefined' 그래서 안뜸
 
 export default App
+
+//로직
+//1. const cntRef=useRef(); 최초 렌더링시 한번 실행 + 값 변경시에 실행
+//                                    (마운트)    +     (업데이트)
+//2. console.log(`Ref값 : ${cntRef.current}`) (undefined)
+//3. 화면 렌더링
+//4. useEffect 실행
+//5. cntRef.current = 0
+
+// -useEffect가 실행되는 시점
+// -useRef의 특징 (값은 바뀌지만 compornent 리렌더링X) ->화면변화 X
