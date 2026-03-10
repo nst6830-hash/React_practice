@@ -1,0 +1,192 @@
+--------------------APp.jsx------------------------------
+
+import React, { useEffect, useState } from 'react'
+import StudentForm from "./components/StudentForm"
+import StudentList from "./components/StudentList"
+
+const App = () => {
+
+  const [students,setStudents] = useState([]) // 학생 목록 상태
+  const [selected,setSelected] = useState(null) // 수정할 학생 객체
+
+  const onAddStudent = (student) => {
+
+    if(student.id){ // 학생 수정
+
+      // 이전 상태 기반으로 업데이트 (불변성 유지)
+      // callback 형태 → 최신 state 기준으로 안전하게 업데이트
+      setStudents((stu) =>
+        stu.map((s)=> (s.id === student.id ? student : s))
+      )
+
+      // 직접 작성 방식 (비추천)
+      // setStudents(students.map(s => s.id === student.id ? student : s))
+    }
+
+    else{ // 학생 추가
+      // 기존 배열 복사 후 새 학생 객체 추가
+      setStudents((stu)=>[
+        ...stu,
+        {...student,id : Date.now()} // 고유 id 생성
+      ])
+    }
+
+    setSelected(null) // 작업 완료 후 선택 상태 초기화
+  }
+
+  const deleteStudent = (id) => {
+    // 해당 id를 제외한 학생 목록 생성
+    setStudents((stu) => stu.filter((s)=> s.id !== id ))
+  }
+
+  const handleEdit = (student) => {
+    setSelected(student) // 수정할 학생 선택
+  }
+
+  // 선택된 학생이 목록에서 삭제되면 selected 초기화
+  useEffect(()=>{
+    if(selected && !students.find((s)=> s.id === selected.id)){
+      setSelected(null)
+    }
+  },[selected, students])
+  
+  return (
+    <div>
+      <h2>학생 정보</h2>
+
+      {/* 학생 입력 / 수정 폼 */}
+      <StudentForm 
+        onSubmit={onAddStudent}
+        selected={selected}
+      />
+
+      {/* 학생 목록 */}
+      <StudentList 
+        students={students}
+        onEdit={handleEdit}
+        onDelete={deleteStudent}
+      />
+
+    </div>
+  )
+}
+
+export default App
+
+-----------------------------------StudentForm.jsx--------------------------------------
+
+import React, { useEffect, useState } from 'react'
+
+const StudentForm = ({onSubmit,selected}) => {
+
+    // 학생 입력 상태
+    const [student,setStudent]=useState({name :'',age:'',major:''})
+
+    // selected 변경 시 폼 데이터 갱신
+    // 수정 모드 → 기존 데이터
+    // 추가 모드 → 빈값
+    useEffect(()=>{
+       setStudent(selected || ({name :'',age:'',major:''}))
+    },[selected])
+
+    const handleChange = (e) => {
+
+        const {name,value} = e.target // input 값
+
+        setStudent((stu)=> ({
+            ...stu, // 기존 객체 복사
+            [name]:value // name 속성 값 변경
+        }))
+    }
+
+    const handleSubmit =(e) =>{
+        e.preventDefault()
+
+        if(!student.name){
+            return
+        }
+
+        // 부모 컴포넌트(App)로 학생 데이터 전달
+        onSubmit(student)
+
+        // 입력창 초기화
+        setStudent({name:'', age:'', major:''})
+    }
+
+  return (
+    <div>
+        <form onSubmit={handleSubmit}>
+
+            <input
+            placeholder='이름'
+            value={student.name}
+            name='name'
+            onChange={handleChange}
+            />
+
+            <input
+            placeholder='나이'
+            value={student.age}
+            name='age'
+            onChange={handleChange}
+            />
+
+            <input
+            placeholder='전공'
+            value={student.major}
+            name='major'
+            onChange={handleChange}
+            />
+
+            {/* id 존재 → 수정 / 없으면 → 추가 */}
+            <button type='submit'>
+              {student.id ? '수정':'추가'}
+            </button>
+
+        </form>
+    </div>
+  )
+}
+
+export default StudentForm
+
+-----------------------------StudentList.jsx------------------------------------------------
+
+import React from 'react'
+
+const StudentList = ({students,onEdit,onDelete}) => {
+
+  return (
+    <div>
+
+        <ul>
+
+            {/* 학생 목록 렌더링 */}
+            {students.map((stu)=> (
+
+                <li key={stu.id}>
+
+                    {/* 학생 정보 출력 */}
+                    {stu.name} | {stu.age} | {stu.major}
+
+                    {/* 수정 버튼 */}
+                    <button onClick={()=>onEdit(stu)}>
+                      수정
+                    </button>
+
+                    {/* 삭제 버튼 */}
+                    <button onClick={()=>onDelete(stu.id)}>
+                      삭제
+                    </button>
+
+                </li>
+
+            ))}
+
+        </ul>
+
+    </div>
+  )
+}
+
+export default StudentList
