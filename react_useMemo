@@ -1,0 +1,36 @@
+import React, { memo, useMemo, useState } from 'react'
+
+const App = memo(() => {
+
+  const [num,setNum]=useState(0)
+
+  const [light,setLight]=useState('lightOn')
+
+  const Toggle = () => { //app렌더링 될 때마다 새로 생성 -> useCallback으로 메모이제이션 가능(자식컴포넌트)
+    if(light=='lightOn')
+      setLight("off");
+    else
+      setLight("on");
+  }
+
+  const comp=useMemo(()=>{
+    console.log('복잡한 연산 재렌더링');
+    return num*num
+  },[num])
+
+  const upButton=()=> {
+    setNum(num+100)
+  }
+
+  return (
+    <div>
+      <button onClick={Toggle}>onoff</button>
+      <p>{comp}</p>
+      <button onClick={upButton}>num증가</button>
+      <p>{num}</p>
+    </div>
+  )
+}
+)
+
+export default App
