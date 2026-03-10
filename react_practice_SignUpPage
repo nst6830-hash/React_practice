@@ -1,0 +1,189 @@
+import React, { useEffect, useState } from "react";
+import "./member.css";
+
+const Member = () => {
+  // eslint-disable-next-line no-unused-vars
+  const [users, setUser] = useState([
+    { id: 1, username: "user1", email: "user1@gmail.com" },
+    { id: 2, username: "user2", email: "user2@gmail.com" },
+    { id: 3, username: "user3", email: "user3@gmail.com" },
+  ]);
+
+  //회원 가입, 로그인 정보 상태 관리
+  const [form,setForm]=useState({username : '',email : '', password : ''})
+
+  const [loginForm,setloginForm]=useState({username : '',email : '', password : ''})
+
+
+ //선택한 게시글(상세보기, 수정할때 선택된 게시글)
+    const [selUser1, setSelUser1]=useState(null);
+
+    //클릭할때마다 변화값을 selPost1(객체)에 저장
+    const selUser=(user)=>{
+        setSelUser1(user);  //post : 클릭한 값(객체)
+    }
+
+    //새 아이디 제목 관리하는 state
+    const [newUsername, setNewUsername]=useState('');
+
+    //새 이메일 내용 관리하는 state
+    const [newUserMail, setNewUseremail]=useState('');
+
+    const [today1, setToday1]=useState("");
+
+    //수정 상태 관리하는 state
+    const [modiMode, setModiMode]=useState(false);
+
+    //날짜객체 생성
+    const now=new Date();
+
+   //수정한 후 저장버튼 클릭시 -> 선택한 게시물을 업데이트 하는 함수 -> 날짜도 변경되므로
+    const updateUser=()=>{
+        const now=new Date();
+        const today1=`${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,"0")}-
+        ${(now.getDate()).toString().padStart(2,"0")} 
+        ${(now.getHours()).toString().padStart(2,"0")}:${(now.getMinutes()).toString().padStart(2,"0")}`;
+
+        const updatedUsers=users.map((user)=>user.id === selUser1.id ? 
+        {...user, //{id:1, title: 기존제목, content:기존내용, date: 기존게시글날짜}
+            username:selUser1.username,
+            email:selUser1.email,
+            date:today1,
+         } : user);
+
+         setUser(updatedUsers);
+
+
+        //선택된 게시글 상태를 수동으로 다시 설정 -> 안써도 됨
+        //해당게시글 보여주기 위한 세팅작업 
+        //-> 위에서 updatedPosts setPosts에 넣었기 때문에 안써도됨
+          setSelUser1({
+            ...selUser1,
+            username:selUser1.username,
+            email:selUser1.email,
+            date:today1,
+        });
+
+        //수정한 후 저장버튼 클릭후 수정모드 false로 세팅
+        setModiMode(false);
+        
+    }
+
+    // //컴포넌트가 마운트 될때만 실행됨 -> 현재 날짜 시간이 today1 에 저장
+    useEffect(()=>{
+        setToday1(`${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,"0")}-
+        ${(now.getDate()).toString().padStart(2,"0")} 
+        ${(now.getHours()).toString().padStart(2,"0")}:${(now.getMinutes()).toString().padStart(2,"0")}`);
+    },[]);
+
+
+
+    //text창에 제목, 내용을 입력해서 "게시글 등록!" 이라는 버튼을 클릭하면
+    //입력한 새로운 제목, 내용이 기존 객체배열에 추가된다.
+
+    //게시글 등록하는 함수
+    const addUser=()=>{
+        if(newUsername.trim() && newUserMail.trim()){
+            const newUser={
+                id:users.length+1,
+                username:newUsername,  //제목 입력하면 제목이 newTitle에 저장
+                email:newUserMail,
+                //게시글 등록할때 날짜 뜨게끔
+                date:today1,
+            };
+            setUser([...users, newUser]) //기존배열복사하고 newPost추가한 새 배열을 만듬
+            //원본배열수정안함.불변성유지
+
+
+            //기존게시물을 펼쳐서 복사하겠다. newPost를 배열 마지막에 추가하여 새로운 배열을 만들어 상태로 설정하겠다.
+            //기존게시물 유지, 추가만됨
+            //스프레드 : 배열/객체 펼치거나 복사할 때 사용
+
+            //posts.push(newPost);
+
+            // setPosts(newPost); //배열을 객체로 덮어쓰려고 하고 있음
+            // //기존 게시물이 다 사라지고 새 게시물 하나만 남는다.
+            // //원본 주소값이 저장되어 원본이 수정됨..-> 우리는 사본을 만들어 데이터 추가해야됨
+
+            //등록하고 text, textarea 공백
+            setNewUsername('');
+            setNewUseremail('');
+
+        }   
+    }   
+
+    //해당 postId가진 게시글 삭제할거임
+    //선택한 id와 일치하지 않는 게시글만 남겨서 posts 에 저장함
+    const deleteUser =(userId)=>{
+        //주어진 postId값과 일치하지 않은 게시글만 필터링해서 새 배열 생성
+        setUser(users.filter((user1)=>user1.id !== userId));
+    };
+    useEffect(()=>{
+        //선택된 게시물이 있고, 그런데 그 게시물이 현재 게시글 목록에는 없다
+        if(selUser1 && !users.some((user)=>user.id === selUser1.id)){
+            setSelUser1(null);
+        }
+        
+    },[users,selUser1]); //게시글 목록이 바뀌거나 선택된 게시글이 바뀔때마다 함수 안 실행
+    // 게시글 클릭해서 보고있는데,
+    // 그 게시물 삭제하면 더이상 게시물이 선택되어있으면 안되니까..null로 세팅
+
+    return (
+
+        // <textarea></textarea>
+        <div className='app'>
+           <h1>Member</h1>
+           <div className="auth-section">
+            <h2>회원가입</h2>
+            <input type='text' value={newUsername} placeholder='아이디 입력' onChange={(e)=>setNewUsername(e.target.value)}></input><br></br>
+            <input type='email' value={newUserMail} placeholder='이메일 입력'  onChange={(e)=>setNewUseremail(e.target.value)}></input>
+            <input type="password" value={form.password} placeholder="비밀번호 입력" onChange={(e)=> setForm({...form, password : e.target.value})}></input>
+            <button onClick={addUser}>회원 가입</button>
+            </div>
+           <div className="auth-section">
+                <h2>로그인</h2>
+                <input type='text' value={newUsername} placeholder='아이디 입력' onChange={(e)=>setNewUsername(e.target.value)}></input><br></br>
+                <input type='email' value={newUserMail} placeholder='이메일 입력'  onChange={(e)=>setNewUseremail(e.target.value)}></input>
+                <button onClick={loginUser}>로그인</button>
+                <h2>{today1}</h2>
+                {users.map((user1)=>{  //posts를 순회하면서 가져온다. posts값이 있을때까지 가져온다.
+                    return(
+                        <div key={user1.id} className="po-item" onClick={()=>{selUser(user1)}}>
+                            <h1>{user1.username}</h1>
+                            <p>{user1.email}</p>
+                            <button onClick={()=>{
+                                // e.stopPropagation();
+                                deleteUser(user1.id)}}>삭제</button>
+                        </div> //key 속성 왜쓰냐 : React에서 배열 렌더링할때 각 항목 식별하기 위해
+                              //상태변화시(어떤항목이 변경, 추가, 삭제되었는지 효율적 파악) 에 dom 업데이트 최적화하기 위해
+                    );
+                })} 
+           </div>
+           {selUser1 && (
+            <div className="selected-user">
+                {modiMode ? (
+                    <>                                                           {/*기존 selPost1값 그대로 복사해서 새로운 객체를 만들어
+                                                                                  title만 수정한 제목으로 덮어쓰겠다 */}
+                        <input type='text' value={selUser1.username} onChange={(e)=>setSelUser1({...selUser1, username:e.target.value})}  />
+                        <input value={selUser1.email} onChange={(e)=>setSelUser1({...selUser1, email:e.target.value})} />
+                        <button onClick={updateUser}>저장</button>
+                    </>
+                )  : (
+                    <>
+                      <h2>{selUser1.username}</h2>  
+                      <p>{selUser1.email}</p>
+                      <p>{selUser1.date}</p>
+                      <button onClick={()=>setModiMode(true)}>수정</button>
+                    </>
+
+
+                )}
+            </div>
+           )}
+           </div>
+        )
+}
+
+
+
+export default Member;
