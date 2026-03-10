@@ -1,0 +1,26 @@
+import React, { useEffect, useRef, useState } from 'react'
+
+const App = () => {
+
+  const cntRef = useRef(); // undefined
+  const [init,setInit]=useState(0);
+
+  //hook 사용해보기
+  //화면이 다 만들어진 이후에 init 값이 변경되면 'cntRef.current=init;' 실행
+  useEffect(()=> {
+    cntRef.current=init;//0이 current에 대입 되면서
+  },[init])
+
+  return (
+
+    <div>
+      <p>{init}</p>
+      <p>{cntRef.current}</p>
+      <button onClick={()=>setInit(init+1)}>state 1 증가</button>
+    </div>
+  );
+};
+//실행된 화면을 보면 숫자가 1개에서 버튼 클릭시
+//2개로 증가 -> 처음 출력은 'undefined' 그래서 안뜸
+
+export default App
