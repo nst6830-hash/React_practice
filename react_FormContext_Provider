@@ -1,0 +1,59 @@
+main.jsx
+
+import Form1 from './Form1.jsx'
+import FormProvider from './FormProvider.jsx'
+createRoot(document.getElementById('root')).render(
+  <Form1>
+    <FormProvider />
+  </Form1>
+  ,
+)
+
+//앱 전체에서 데이터를 공유해서 사용할 수 있게끔 설정함.
+
+
+//export할 때. default가 아니면 import 할 때 {컴포넌트}로 받아와야함
+//default 면 , import 컴포넌트명 from
+
+///////////////////////////////////////////////////////////////////////
+FormProvider.jsx
+
+import React, { useContext } from 'react'
+import { FormContext } from './Form1'
+
+const FormProvider = () => {
+    
+    const value = useContext(FormContext)
+    console.log(value);
+
+  return (
+    <div>
+
+    </div>
+  )
+}
+
+export default FormProvider
+
+///////////////////////////////////////////////////////////////////////
+Form1.jsx
+
+import React, { createContext } from 'react'
+import FormProvider from './FormProvider'
+
+export const FormContext = createContext({})
+
+const Form1 = (props) => {
+    const {children} = props
+
+    const name = {'안녕하세요':1}
+
+  return (
+   <FormContext.Provider value={name}>
+    {children}
+   </FormContext.Provider>
+  )
+}
+
+export default Form1
+
