@@ -1,0 +1,288 @@
+import React, { useEffect, useState } from "react";
+import "./member.css";
+
+const Member = () => {
+  const [users, setUser] = useState([
+    { id: 1, username: "user1", email: "user1@gmail.com", password: "1234" },
+    { id: 2, username: "user2", email: "user2@gmail.com", password: "1234" },
+  ]);
+
+  const [selUser1, setSelUser1] = useState(null);
+  const [today1, setToday1] = useState("");
+  const [modiMode, setModiMode] = useState(false);
+
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  const [editUserForm, setEditUserForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const now = new Date();
+
+  useEffect(() => {
+    setToday1(`${now.getFullYear()}-${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} 
+      ${now.getHours().toString().padStart(2, "0")}:${now
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}`);
+  }, []);
+
+  const selUser = (user) => {
+    setSelUser1(user);
+  };
+
+  const addUser = () => {
+    if (form.username.trim() && form.email.trim() && form.password.trim()) {
+      const newUser = {
+        id: users.length + 1,
+        ...form,
+      };
+      setUser([...users, newUser]);
+      setForm({ username: "", email: "", password: "" });
+    }
+  };
+
+  const loginUser = () => {
+    const user = users.find(
+      (user) =>
+        user.username === loginForm.username &&
+        user.password === loginForm.password,
+    );
+
+    if (user) {
+      setLoggedInUser(user);
+      setEditUserForm(user);
+      setLoginForm({ username: "", password: "" });
+    } else {
+      alert("아이디 또는 비밀번호가 틀렸습니다");
+    }
+  };
+
+  const logoutUser = () => {
+    setLoggedInUser(null);
+  };
+
+  // 로그인 사용자 수정
+  const updateMyInfo = () => {
+    const updateUsers = users.map((user) =>
+      user.id === loggedInUser.id ? { ...user, ...editUserForm } : user,
+    );
+
+    setUser(updateUsers);
+    setLoggedInUser({ ...loggedInUser, ...editUserForm });
+    setEditUserForm({ username: "", email: "", password: "" });
+
+    alert("회원정보 수정 완료");
+  };
+
+  // 선택 사용자 수정
+  const updateUser = () => {
+    const updateUsers = users.map((user) =>
+      user.id === selUser1.id ? selUser1 : user,
+    );
+
+    setUser(updateUsers);
+    setModiMode(false);
+  };
+
+  const deleteUser = (userId) => {
+    setUser(users.filter((user) => user.id !== userId));
+  };
+
+  useEffect(() => {
+    if (selUser1 && !users.some((user) => user.id === selUser1.id)) {
+      setSelUser1(null);
+    }
+  }, [users, selUser1]);
+
+  return (
+    <div className="app">
+      <h1>Member</h1>
+
+      {!loggedInUser ? (
+        <div className="auth-section">
+          <h2>회원가입</h2>
+
+          <input
+            type="text"
+            value={form.username}
+            placeholder="아이디 입력"
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+          />
+
+          <br />
+
+          <input
+            type="email"
+            value={form.email}
+            placeholder="이메일 입력"
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+
+          <br />
+
+          <input
+            type="password"
+            value={form.password}
+            placeholder="비밀번호 입력"
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
+
+          <button onClick={addUser}>회원 가입</button>
+        </div>
+      ) : (
+        <>
+          <h2>로그인된 사용자 : {loggedInUser.username}</h2>
+
+          <button onClick={logoutUser} className="logoutBtn">
+            로그아웃
+          </button>
+
+          <div className="user-detail">
+            <h2>회원 정보 수정</h2>
+
+            <input
+              type="text"
+              value={editUserForm.username}
+              onChange={(e) =>
+                setEditUserForm({
+                  ...editUserForm,
+                  username: e.target.value,
+                })
+              }
+            />
+
+            <br />
+
+            <input
+              type="email"
+              value={editUserForm.email}
+              onChange={(e) =>
+                setEditUserForm({
+                  ...editUserForm,
+                  email: e.target.value,
+                })
+              }
+            />
+
+            <br />
+
+            <input
+              type="password"
+              value={editUserForm.password}
+              onChange={(e) =>
+                setEditUserForm({
+                  ...editUserForm,
+                  password: e.target.value,
+                })
+              }
+            />
+
+            <button onClick={updateMyInfo}>회원 정보 수정</button>
+          </div>
+        </>
+      )}
+
+      <div className="auth-section">
+        <h2>로그인</h2>
+
+        <input
+          type="text"
+          value={loginForm.username}
+          placeholder="아이디 입력"
+          onChange={(e) =>
+            setLoginForm({ ...loginForm, username: e.target.value })
+          }
+        />
+
+        <br />
+
+        <input
+          type="password"
+          value={loginForm.password}
+          placeholder="비밀번호 입력"
+          onChange={(e) =>
+            setLoginForm({ ...loginForm, password: e.target.value })
+          }
+        />
+
+        <br />
+
+        <button onClick={loginUser}>로그인</button>
+
+        <h2>{today1}</h2>
+
+        {users.map((user1) => {
+          return (
+            <div
+              key={user1.id}
+              className="po-item"
+              onClick={() => {
+                selUser(user1);
+              }}
+            >
+              <h1>{user1.username}</h1>
+              <p>{user1.email}</p>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteUser(user1.id);
+                }}
+              >
+                삭제
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {selUser1 && (
+        <div className="selected-user">
+          {modiMode ? (
+            <>
+              <input
+                type="text"
+                value={selUser1.username}
+                onChange={(e) =>
+                  setSelUser1({
+                    ...selUser1,
+                    username: e.target.value,
+                  })
+                }
+              />
+
+              <input
+                value={selUser1.email}
+                onChange={(e) =>
+                  setSelUser1({
+                    ...selUser1,
+                    email: e.target.value,
+                  })
+                }
+              />
+
+              <button onClick={updateUser}>저장</button>
+            </>
+          ) : (
+            <>
+              <h2>{selUser1.username}</h2>
+              <p>{selUser1.email}</p>
+
+              <button onClick={() => setModiMode(true)}>수정</button>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Member;
