@@ -1,0 +1,45 @@
+import React, { useState } from 'react'
+
+const App = () => {
+
+  const [user,setUser]=useState([
+    {id : 1, userid : '홍길동', password:'1234'}
+  ])
+
+  const [login,setLogin]=useState({
+    userid : '', password : ''
+  })
+
+  const handleLogin = (e) => {
+    e.preventDefault()
+
+  const foundUser = user.find( u => u.userid === login.userid && u.password === login.password)
+
+    if(foundUser){
+      console.log("로그인 성공")
+    }else{
+      console.log("로그인 실패")
+    }
+  }
+
+  return (
+    <div className='auth-section'>
+      <h2>로그인</h2>
+
+      <form onSubmit={handleLogin}>
+
+        <input type='text' value={login.userid} placeholder='아이디 입력'
+          onChange={(e)=> setLogin({...login, userid : e.target.value})} />
+
+        <input type='password' value={login.password} placeholder='비밀번호 입력'
+          onChange={(e)=> setLogin({...login, password : e.target.value})} />
+
+        <button type="submit">로그인</button>
+
+      </form>
+
+    </div>
+  )
+}
+
+export default App
