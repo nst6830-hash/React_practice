@@ -1,0 +1,17 @@
+import React, { useState } from 'react'
+
+
+
+const App = () => {
+  const [num,setNum] = useState('')
+
+  return (
+    <div>
+      <input type='text' onChange={(e)=>setNum(e.target.value)}></input>
+      <p>{num > 10 ?  "10보다 큽니다" : "10보다 작습니다."}</p>
+
+    </div>
+  )
+}
+
+export default App
