@@ -1,0 +1,40 @@
+import React, { useEffect, useState } from 'react'
+
+const App = () => {
+//1. useState 초기화 (비어있게)
+  const [user,setUser]=useState("")
+//2. onCh1 함수 생성
+  const onCh1=(e)=>{
+    setUser({...user,[e.target.name]:e.target.value})
+  }
+//3. user 상태가 바뀔 때 마다 localstorage에 저장
+  useEffect(()=> {
+    localStorage.setItem("user",JSON.stringify(user)) //객체 -> 문자열
+  },[user])
+
+  //4. 마운트 시점에서 localStorage 에서 불러오기
+  useEffect(()=>{
+    const saveUser=localStorage.getItem("user")
+    if(saveUser){
+      setUser(JSON.parse(saveUser)) // 문자열 -> 객체
+    }
+  },[])
+
+  const save=()=>{
+    alert("저장")
+  }
+  
+
+
+  return (
+    <div>
+      이름<input value={user.name} onChange={onCh1} name='name' /><br/>
+      이메일<input value={user.email} onChange={onCh1} name='email' /><br/>
+      비밀번호<input value={user.password} onChange={onCh1} name='password' /><br/>
+
+      <button onClick={save}>저장</button>
+    </div>
+  )
+}
+
+export default App
