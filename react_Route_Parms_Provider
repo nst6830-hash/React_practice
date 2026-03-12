@@ -1,0 +1,85 @@
+//////////////////////////////////////////////////////////////////////////////////
+//App.jsx
+
+import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Users, UsersProvider } from './components/Users'
+import UsersInfo from './components/UsersInfo'
+const App = () => {
+
+  return (
+    <UsersProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/users' element={<Users/>}>
+        </Route>
+        <Route path='/users/:id' element={<UsersInfo/>}> {/*동적 연결*/ }
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    </UsersProvider>
+  )
+}
+
+export default App
+
+//////////////////////////////////////////////////////////////////////////////////
+// 2. Users.jsx
+
+import React, { createContext, useContext } from 'react'
+import { Link } from 'react-router-dom';
+
+export const UsersContext=createContext();
+
+export const UsersProvider=({children})=>{
+    const users = [
+        {id: 1, name:'Alice', age : 23, email : 'alice@naver.com'},
+        {id: 2, name:'jack', age : 32, email : 'jacky@gmail.com'},
+        {id: 3, name:'mark', age : 27, email : 'mark45@nate.com'},
+    ]
+
+    return(
+        <UsersContext.Provider value={users}>
+            {children}
+            {/* props 객체 안에 속성 childern 있었음 태그와 태그 사이 내용 */}
+        </UsersContext.Provider>
+    )
+}
+
+export const Users = () => {
+    
+    const users = useContext(UsersContext)
+    return (
+        <div>                               {/*   Link to ="/users/1"  */}  
+            {users.map((user)=><li key={user.id}><Link to = {`/users/${user.id}`}>{user.name}</Link></li>)}
+        </div>
+  )
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//3. UsersInfo.jsx
+
+import React, {  useContext } from 'react'
+import { UsersContext } from './Users'
+import { useParams } from 'react-router-dom'
+
+const UsersInfo = () => {
+    
+    const users=useContext(UsersContext)
+    const userId=parseInt(useParams().id)
+    // const { id } = parseInt()
+
+    const currUser=users.find((user)=> user.id === userId)
+
+  return (
+    <div>
+        <li>id : {currUser.id}</li>
+        <li>name : {currUser.name}</li>
+        <li>age : {currUser.age}</li>
+        <li>email : {currUser.email}</li>
+        
+    </div>
+  )
+}
+
+export default UsersInfo 
