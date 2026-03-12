@@ -1,0 +1,42 @@
+import React, { useState } from 'react'
+
+const App = () => {
+  const [text,setText] = useState("")
+
+  const [btn,setBtn] = useState("눌러잇!")
+  const btnClick = () => {
+    setBtn("로딩중 ...")
+    setTimeout(()=>{
+      setBtn("완료!")
+    },3000)
+  }
+
+  const [num,setNum] = useState(0)
+
+  const nums = []
+    for (let i=1; i<= num; i++){
+      nums.push(i)
+    }
+
+  return (
+    <div>
+      <input type='text' value={text} 
+      onChange={(e)=>setText(e.target.value)}></input>
+      <p>글자 수 : {text.length}</p>
+
+      <button onClick={btnClick}>버튼!</button>
+      <p>{btn}</p>
+
+      <input type='number' 
+      onChange={(e) => setNum(e.target.value)}/>
+    <ul>
+      {nums.map((n) =>(
+        <li key={n}>{n}</li>
+      ))}
+    </ul>
+
+    </div>
+  )
+}
+
+export default App
