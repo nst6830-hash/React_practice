@@ -2,23 +2,45 @@
 //App.jsx
 
 import React, { useContext, useState } from 'react'
+
+// Context 가져오기
 import { ThemmodContext } from './ThemmodProvider'
 
-
-
 const App = () => {
+
+  // 숫자 입력값 상태
   const [num,setNum] = useState('')
+
+  // Context에서 dark 상태와 toggle 함수 가져오기
   const {dark,toggle} = useContext(ThemmodContext)
 
   return (
     <div>
-      <input type='text' onChange={(e)=>setNum(e.target.value)}></input>
-      <p>{num > 10 ?  "10보다 큽니다" : "10보다 작습니다."}</p>
-      <button onClick={()=>toggle()}>모드</button>
+
+      {/* 숫자 입력 */}
+      <input
+        type='text'
+        onChange={(e)=>setNum(e.target.value)}
+      ></input>
+
+      {/* 입력된 숫자가 10보다 큰지 조건 출력 */}
+      <p>
+        {num > 10 ?  "10보다 큽니다" : "10보다 작습니다."}
+      </p>
+
+      {/* 다크모드 상태 변경 버튼 */}
+      <button onClick={()=>toggle()}>
+        모드
+      </button>
+
+      {/* 현재 모드 상태 출력 */}
       {dark ? '다크': '라이트'}
+
     </div>
   )
 }
+
+export default App
 
 export default App
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,19 +48,31 @@ export default App
 
 import React, { createContext, useState } from 'react'
 
+// Context 생성
+// 전역으로 공유할 데이터를 담는 "통로" 역할
 export const ThemmodContext = createContext()
 
+// Provider 컴포넌트
+// children으로 감싼 컴포넌트들에게 데이터를 전달
 export const ThemmodProvider = (props) => {
 
+    // 다크모드 상태
     const [dark,setDark] = useState(true)
 
+    // 다크모드 상태 변경 함수
     const toggle = () => {
         setDark(!dark)
     }
 
     return (
+
+        // Provider를 통해 value 전달
+        // App 및 하위 컴포넌트에서 사용할 수 있음
         <ThemmodContext.Provider value={{dark,toggle}}>
+
+            {/* Provider로 감싼 컴포넌트(App)가 들어오는 자리 */}
             {props.children}
+
         </ThemmodContext.Provider>
     )
 }
@@ -53,11 +87,15 @@ import App from './App.jsx'
 import './App.css'
 import { ThemmodProvider } from './ThemmodProvider.jsx'
 
+// index.html의 root 요소에 React 앱을 렌더링
 createRoot(document.getElementById('root')).render(
+
+  // Provider로 App을 감싸서
+  // App 및 하위 컴포넌트에서 Context 데이터를 사용할 수 있게 함
   <ThemmodProvider>
     <App/>
   </ThemmodProvider>
-  
+
 )
 
 //앱 전체에서 데이터를 공유해서 사용할 수 있게끔 설정함.
